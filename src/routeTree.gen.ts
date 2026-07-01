@@ -9,38 +9,188 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ImovelSlugRouteImport } from './routes/imovel.$slug'
+import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
+import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppTarefasRouteImport } from './routes/_authenticated/app.tarefas'
+import { Route as AuthenticatedAppReservasRouteImport } from './routes/_authenticated/app.reservas'
+import { Route as AuthenticatedAppImoveisRouteImport } from './routes/_authenticated/app.imoveis'
+import { Route as AuthenticatedAppCalendarioRouteImport } from './routes/_authenticated/app.calendario'
+import { Route as AuthenticatedAppImoveisNovoRouteImport } from './routes/_authenticated/app.imoveis.novo'
+import { Route as AuthenticatedAppImoveisIdRouteImport } from './routes/_authenticated/app.imoveis.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ImovelSlugRoute = ImovelSlugRouteImport.update({
+  id: '/imovel/$slug',
+  path: '/imovel/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAppRoute = AuthenticatedAppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppTarefasRoute = AuthenticatedAppTarefasRouteImport.update({
+  id: '/tarefas',
+  path: '/tarefas',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppReservasRoute =
+  AuthenticatedAppReservasRouteImport.update({
+    id: '/reservas',
+    path: '/reservas',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppImoveisRoute = AuthenticatedAppImoveisRouteImport.update({
+  id: '/imoveis',
+  path: '/imoveis',
+  getParentRoute: () => AuthenticatedAppRoute,
+} as any)
+const AuthenticatedAppCalendarioRoute =
+  AuthenticatedAppCalendarioRouteImport.update({
+    id: '/calendario',
+    path: '/calendario',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppImoveisNovoRoute =
+  AuthenticatedAppImoveisNovoRouteImport.update({
+    id: '/novo',
+    path: '/novo',
+    getParentRoute: () => AuthenticatedAppImoveisRoute,
+  } as any)
+const AuthenticatedAppImoveisIdRoute =
+  AuthenticatedAppImoveisIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAppImoveisRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/app': typeof AuthenticatedAppRouteWithChildren
+  '/imovel/$slug': typeof ImovelSlugRoute
+  '/app/calendario': typeof AuthenticatedAppCalendarioRoute
+  '/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
+  '/app/reservas': typeof AuthenticatedAppReservasRoute
+  '/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
+  '/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/imovel/$slug': typeof ImovelSlugRoute
+  '/app/calendario': typeof AuthenticatedAppCalendarioRoute
+  '/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
+  '/app/reservas': typeof AuthenticatedAppReservasRoute
+  '/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/app': typeof AuthenticatedAppIndexRoute
+  '/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
+  '/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/app': typeof AuthenticatedAppRouteWithChildren
+  '/imovel/$slug': typeof ImovelSlugRoute
+  '/_authenticated/app/calendario': typeof AuthenticatedAppCalendarioRoute
+  '/_authenticated/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
+  '/_authenticated/app/reservas': typeof AuthenticatedAppReservasRoute
+  '/_authenticated/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
+  '/_authenticated/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/app'
+    | '/imovel/$slug'
+    | '/app/calendario'
+    | '/app/imoveis'
+    | '/app/reservas'
+    | '/app/tarefas'
+    | '/app/'
+    | '/app/imoveis/$id'
+    | '/app/imoveis/novo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/imovel/$slug'
+    | '/app/calendario'
+    | '/app/imoveis'
+    | '/app/reservas'
+    | '/app/tarefas'
+    | '/app'
+    | '/app/imoveis/$id'
+    | '/app/imoveis/novo'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/app'
+    | '/imovel/$slug'
+    | '/_authenticated/app/calendario'
+    | '/_authenticated/app/imoveis'
+    | '/_authenticated/app/reservas'
+    | '/_authenticated/app/tarefas'
+    | '/_authenticated/app/'
+    | '/_authenticated/app/imoveis/$id'
+    | '/_authenticated/app/imoveis/novo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ImovelSlugRoute: typeof ImovelSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +198,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/imovel/$slug': {
+      id: '/imovel/$slug'
+      path: '/imovel/$slug'
+      fullPath: '/imovel/$slug'
+      preLoaderRoute: typeof ImovelSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/app': {
+      id: '/_authenticated/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AuthenticatedAppRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/app/': {
+      id: '/_authenticated/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/tarefas': {
+      id: '/_authenticated/app/tarefas'
+      path: '/tarefas'
+      fullPath: '/app/tarefas'
+      preLoaderRoute: typeof AuthenticatedAppTarefasRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/reservas': {
+      id: '/_authenticated/app/reservas'
+      path: '/reservas'
+      fullPath: '/app/reservas'
+      preLoaderRoute: typeof AuthenticatedAppReservasRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/imoveis': {
+      id: '/_authenticated/app/imoveis'
+      path: '/imoveis'
+      fullPath: '/app/imoveis'
+      preLoaderRoute: typeof AuthenticatedAppImoveisRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/calendario': {
+      id: '/_authenticated/app/calendario'
+      path: '/calendario'
+      fullPath: '/app/calendario'
+      preLoaderRoute: typeof AuthenticatedAppCalendarioRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/imoveis/novo': {
+      id: '/_authenticated/app/imoveis/novo'
+      path: '/novo'
+      fullPath: '/app/imoveis/novo'
+      preLoaderRoute: typeof AuthenticatedAppImoveisNovoRouteImport
+      parentRoute: typeof AuthenticatedAppImoveisRoute
+    }
+    '/_authenticated/app/imoveis/$id': {
+      id: '/_authenticated/app/imoveis/$id'
+      path: '/$id'
+      fullPath: '/app/imoveis/$id'
+      preLoaderRoute: typeof AuthenticatedAppImoveisIdRouteImport
+      parentRoute: typeof AuthenticatedAppImoveisRoute
+    }
   }
 }
 
+interface AuthenticatedAppImoveisRouteChildren {
+  AuthenticatedAppImoveisIdRoute: typeof AuthenticatedAppImoveisIdRoute
+  AuthenticatedAppImoveisNovoRoute: typeof AuthenticatedAppImoveisNovoRoute
+}
+
+const AuthenticatedAppImoveisRouteChildren: AuthenticatedAppImoveisRouteChildren =
+  {
+    AuthenticatedAppImoveisIdRoute: AuthenticatedAppImoveisIdRoute,
+    AuthenticatedAppImoveisNovoRoute: AuthenticatedAppImoveisNovoRoute,
+  }
+
+const AuthenticatedAppImoveisRouteWithChildren =
+  AuthenticatedAppImoveisRoute._addFileChildren(
+    AuthenticatedAppImoveisRouteChildren,
+  )
+
+interface AuthenticatedAppRouteChildren {
+  AuthenticatedAppCalendarioRoute: typeof AuthenticatedAppCalendarioRoute
+  AuthenticatedAppImoveisRoute: typeof AuthenticatedAppImoveisRouteWithChildren
+  AuthenticatedAppReservasRoute: typeof AuthenticatedAppReservasRoute
+  AuthenticatedAppTarefasRoute: typeof AuthenticatedAppTarefasRoute
+  AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+}
+
+const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
+  AuthenticatedAppCalendarioRoute: AuthenticatedAppCalendarioRoute,
+  AuthenticatedAppImoveisRoute: AuthenticatedAppImoveisRouteWithChildren,
+  AuthenticatedAppReservasRoute: AuthenticatedAppReservasRoute,
+  AuthenticatedAppTarefasRoute: AuthenticatedAppTarefasRoute,
+  AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+}
+
+const AuthenticatedAppRouteWithChildren =
+  AuthenticatedAppRoute._addFileChildren(AuthenticatedAppRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppRoute: typeof AuthenticatedAppRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppRoute: AuthenticatedAppRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ImovelSlugRoute: ImovelSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
