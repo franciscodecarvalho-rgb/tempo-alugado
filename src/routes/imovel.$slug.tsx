@@ -53,7 +53,7 @@ function PropertyPage() {
             alt={property.title}
             className="h-72 w-full object-cover md:col-span-2 md:row-span-2 md:h-full"
           />
-          {property.photos.slice(1, 3).map((src, i) => (
+          {property.photos.slice(1, 3).map((src: string, i: number) => (
             <img
               key={i}
               src={src}
@@ -84,7 +84,7 @@ function PropertyPage() {
             <div className="mt-8 border-t border-border pt-6">
               <h2 className="font-display text-xl font-semibold">Comodidades</h2>
               <ul className="mt-3 grid grid-cols-2 gap-2 text-sm">
-                {property.amenities.map((a) => (
+                {property.amenities.map((a: string) => (
                   <li key={a} className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-primary" /> {a}
                   </li>

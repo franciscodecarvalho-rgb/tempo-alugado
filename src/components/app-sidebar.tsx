@@ -23,13 +23,14 @@ import {
 } from "@/components/ui/sidebar";
 import { supabase } from "@/integrations/supabase/client";
 
-const items = [
+type NavItem = { title: string; url: string; icon: typeof Home; exact?: boolean };
+const items: NavItem[] = [
   { title: "Dashboard", url: "/app", icon: LayoutDashboard, exact: true },
   { title: "Imóveis", url: "/app/imoveis", icon: Home },
   { title: "Calendário", url: "/app/calendario", icon: CalendarDays },
   { title: "Reservas", url: "/app/reservas", icon: ClipboardList },
   { title: "Tarefas", url: "/app/tarefas", icon: Sparkles },
-] as const;
+];
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
@@ -64,7 +65,7 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url, item.exact)}>
-                    <Link to={item.url}>
+                    <Link to={item.url as "/app"}>
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
