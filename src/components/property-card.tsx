@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { BedDouble, Bath, Users, MapPin } from "lucide-react";
-import type { Property } from "@/lib/mock-data";
+import { BedDouble, Bath, Users, MapPin, ImageOff } from "lucide-react";
+import type { Property } from "@/lib/api";
 
 export function PropertyCard({ property }: { property: Property }) {
   return (
@@ -10,12 +10,18 @@ export function PropertyCard({ property }: { property: Property }) {
       className="group overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all hover:-translate-y-1 hover:shadow-warm"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        <img
-          src={property.coverPhoto}
-          alt={property.title}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {property.coverPhoto ? (
+          <img
+            src={property.coverPhoto}
+            alt={property.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+            <ImageOff className="h-8 w-8" />
+          </div>
+        )}
         <div className="absolute right-3 top-3 rounded-full bg-background/95 px-3 py-1 text-xs font-medium">
           R$ {property.nightlyRate.toLocaleString("pt-BR")}<span className="text-muted-foreground">/noite</span>
         </div>

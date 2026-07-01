@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createBookingRequest, computeTotal, type Property } from "@/lib/api";
 
 const schema = z
   .object({
@@ -25,22 +26,53 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>;
 
-export function BookingRequestForm({ propertyTitle }: { propertyTitle: string }) {
+const brl = (v: number) => `R$ ${v.toLocaleString("pt-BR")}`;
+
+export function BookingRequestForm({ property }: { property: Property }) {
   const [submitting, setSubmitting] = useState(false);
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { guests: 2 },
   });
 
+  // Desdobramento de preço reativo às datas escolhidas.
+  const checkIn = form.watch("checkIn");
+  const checkOut = form.watch("checkOut");
+  const breakdown =
+    checkIn && checkOut && new Date(checkOut) > new Date(checkIn)
+      ? computeTotal({
+          checkIn,
+          checkOut,
+          nightlyRate: property.nightlyRate,
+          cleaningFee: property.cleaningFee,
+          laundryFee: property.laundryFee,
+        })
+      : null;
+
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
     try {
-      // TODO: chamar createBookingRequest server fn assim que o schema estiver definido.
-      await new Promise((r) => setTimeout(r, 700));
+      await createBookingRequest({
+        propertyId: property.id,
+        guestName: values.name,
+        guestEmail: values.email,
+        guestPhone: values.phone,
+        checkIn: values.checkIn,
+        checkOut: values.checkOut,
+        guests: values.guests,
+        message: values.message,
+        nightlyRate: property.nightlyRate,
+        cleaningFee: property.cleaningFee,
+        laundryFee: property.laundryFee,
+      });
       toast.success("Solicitação enviada!", {
-        description: `Recebemos seu pedido para ${propertyTitle}. Retornaremos em breve.`,
+        description: `Recebemos seu pedido para ${property.title}. Retornaremos em breve.`,
       });
       form.reset({ guests: 2 });
+    } catch (err) {
+      toast.error("Não foi possível enviar", {
+        description: err instanceof Error ? err.message : "Tente novamente em instantes.",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -68,6 +100,35 @@ export function BookingRequestForm({ propertyTitle }: { propertyTitle: string })
         <Label htmlFor="guests">Hóspedes</Label>
         <Input id="guests" type="number" min={1} max={20} {...form.register("guests")} />
       </div>
+
+      {breakdown && (
+        <div className="space-y-1 rounded-lg border border-border bg-muted/40 p-3 text-sm">
+          <div className="flex justify-between text-muted-foreground">
+            <span>
+              {brl(property.nightlyRate)} × {breakdown.nights}{" "}
+              {breakdown.nights === 1 ? "noite" : "noites"}
+            </span>
+            <span>{brl(breakdown.nightsTotal)}</span>
+          </div>
+          {property.cleaningFee > 0 && (
+            <div className="flex justify-between text-muted-foreground">
+              <span>Taxa de limpeza</span>
+              <span>{brl(property.cleaningFee)}</span>
+            </div>
+          )}
+          {property.laundryFee > 0 && (
+            <div className="flex justify-between text-muted-foreground">
+              <span>Lavanderia</span>
+              <span>{brl(property.laundryFee)}</span>
+            </div>
+          )}
+          <div className="flex justify-between border-t border-border pt-1 font-medium text-foreground">
+            <span>Total</span>
+            <span>{brl(breakdown.total)}</span>
+          </div>
+        </div>
+      )}
+
       <div>
         <Label htmlFor="name">Nome completo</Label>
         <Input id="name" {...form.register("name")} placeholder="Como devemos te chamar" />

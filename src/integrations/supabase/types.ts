@@ -14,16 +14,266 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      properties: {
+        Row: {
+          id: string
+          slug: string
+          title: string
+          city: string | null
+          state: string | null
+          bedrooms: number
+          bathrooms: number
+          max_guests: number
+          nightly_rate: number
+          cleaning_fee: number
+          laundry_fee: number
+          description: string | null
+          amenities: string[]
+          cover_photo: string | null
+          active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          title: string
+          city?: string | null
+          state?: string | null
+          bedrooms?: number
+          bathrooms?: number
+          max_guests?: number
+          nightly_rate?: number
+          cleaning_fee?: number
+          laundry_fee?: number
+          description?: string | null
+          amenities?: string[]
+          cover_photo?: string | null
+          active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          title?: string
+          city?: string | null
+          state?: string | null
+          bedrooms?: number
+          bathrooms?: number
+          max_guests?: number
+          nightly_rate?: number
+          cleaning_fee?: number
+          laundry_fee?: number
+          description?: string | null
+          amenities?: string[]
+          cover_photo?: string | null
+          active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      property_photos: {
+        Row: {
+          id: string
+          property_id: string
+          url: string
+          position: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          property_id: string
+          url: string
+          position?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          property_id?: string
+          url?: string
+          position?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_photos_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bookings: {
+        Row: {
+          id: string
+          property_id: string
+          guest_name: string
+          guest_email: string
+          guest_phone: string | null
+          check_in: string
+          check_out: string
+          guests: number
+          status: string
+          nightly_rate: number
+          cleaning_fee: number
+          laundry_fee: number
+          total_amount: number
+          message: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          property_id: string
+          guest_name: string
+          guest_email: string
+          guest_phone?: string | null
+          check_in: string
+          check_out: string
+          guests?: number
+          status?: string
+          nightly_rate?: number
+          cleaning_fee?: number
+          laundry_fee?: number
+          total_amount?: number
+          message?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          property_id?: string
+          guest_name?: string
+          guest_email?: string
+          guest_phone?: string | null
+          check_in?: string
+          check_out?: string
+          guests?: number
+          status?: string
+          nightly_rate?: number
+          cleaning_fee?: number
+          laundry_fee?: number
+          total_amount?: number
+          message?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blocked_dates: {
+        Row: {
+          id: string
+          property_id: string
+          start_date: string
+          end_date: string
+          reason: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          property_id: string
+          start_date: string
+          end_date: string
+          reason?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          property_id?: string
+          start_date?: string
+          end_date?: string
+          reason?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blocked_dates_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          id: string
+          name: string | null
+          email: string | null
+          created_at: string
+        }
+        Insert: {
+          id: string
+          name?: string | null
+          email?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string | null
+          email?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          user_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      check_availability: {
+        Args: {
+          _property_id: string
+          _check_in: string
+          _check_out: string
+          _exclude_booking_id?: string
+        }
+        Returns: boolean
+      }
+      get_property_availability: {
+        Args: { _property_id: string }
+        Returns: { start_date: string; end_date: string }[]
+      }
+      has_role: {
+        Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] }
+        Returns: boolean
+      }
+      is_staff: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "gestor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +400,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "gestor"],
+    },
   },
 } as const

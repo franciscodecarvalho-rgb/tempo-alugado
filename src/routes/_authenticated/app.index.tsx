@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Home, CalendarCheck, Clock, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,19 +11,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MOCK_BOOKINGS, MOCK_PROPERTIES } from "@/lib/mock-data";
+import { fetchBookings, fetchAllProperties } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/app/")({
   component: Dashboard,
 });
 
 function Dashboard() {
-  const confirmed = MOCK_BOOKINGS.filter((b) => b.status === "confirmed");
-  const pending = MOCK_BOOKINGS.filter((b) => b.status === "pending");
+  const { data: bookings = [] } = useQuery({ queryKey: ["bookings"], queryFn: fetchBookings });
+  const { data: properties = [] } = useQuery({ queryKey: ["properties"], queryFn: fetchAllProperties });
+
+  const confirmed = bookings.filter((b) => b.status === "confirmed");
+  const pending = bookings.filter((b) => b.status === "pending");
   const revenue = confirmed.reduce((acc, b) => acc + b.totalAmount, 0);
 
   const metrics = [
-    { label: "Imóveis ativos", value: MOCK_PROPERTIES.length, icon: Home },
+    { label: "Imóveis ativos", value: properties.filter((p) => p.active).length, icon: Home },
     { label: "Reservas confirmadas", value: confirmed.length, icon: CalendarCheck },
     { label: "Solicitações pendentes", value: pending.length, icon: Clock },
     {
@@ -58,24 +62,25 @@ function Dashboard() {
           <CardTitle>Próximas reservas</CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Hóspede</TableHead>
-                <TableHead>Imóvel</TableHead>
-                <TableHead>Entrada</TableHead>
-                <TableHead>Saída</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {MOCK_BOOKINGS.map((b) => {
-                const prop = MOCK_PROPERTIES.find((p) => p.id === b.propertyId);
-                return (
+          {bookings.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhuma reserva ainda.</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Hóspede</TableHead>
+                  <TableHead>Imóvel</TableHead>
+                  <TableHead>Entrada</TableHead>
+                  <TableHead>Saída</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {bookings.map((b) => (
                   <TableRow key={b.id}>
                     <TableCell className="font-medium">{b.guestName}</TableCell>
-                    <TableCell className="text-muted-foreground">{prop?.title}</TableCell>
+                    <TableCell className="text-muted-foreground">{b.propertyTitle}</TableCell>
                     <TableCell>{new Date(b.checkIn).toLocaleDateString("pt-BR")}</TableCell>
                     <TableCell>{new Date(b.checkOut).toLocaleDateString("pt-BR")}</TableCell>
                     <TableCell>
@@ -85,10 +90,10 @@ function Dashboard() {
                       R$ {b.totalAmount.toLocaleString("pt-BR")}
                     </TableCell>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

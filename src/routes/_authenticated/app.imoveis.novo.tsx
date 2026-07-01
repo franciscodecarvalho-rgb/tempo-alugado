@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { ArrowLeft, Upload, X } from "lucide-react";
 import { toast } from "sonner";
@@ -7,34 +8,62 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { createProperty } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/app/imoveis/novo")({
   component: NovoImovel,
 });
 
+type PickedPhoto = { url: string; file: File };
+
 function NovoImovel() {
   const navigate = useNavigate();
-  const [photos, setPhotos] = useState<{ url: string; name: string }[]>([]);
+  const queryClient = useQueryClient();
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [saving, setSaving] = useState(false);
 
   const onPickPhotos = (files: FileList | null) => {
     if (!files) return;
-    const next = Array.from(files).slice(0, 12 - photos.length).map((f) => ({
-      url: URL.createObjectURL(f),
-      name: f.name,
-    }));
+    const next = Array.from(files)
+      .slice(0, 12 - photos.length)
+      .map((f) => ({ url: URL.createObjectURL(f), file: f }));
     setPhotos((prev) => [...prev, ...next]);
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const num = (form: HTMLFormElement, id: string) => Number((form.elements.namedItem(id) as HTMLInputElement)?.value || 0);
+  const str = (form: HTMLFormElement, id: string) => (form.elements.namedItem(id) as HTMLInputElement)?.value.trim() ?? "";
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     setSaving(true);
-    // TODO: chamar createProperty server fn + upload para bucket `property-photos`
-    await new Promise((r) => setTimeout(r, 700));
-    setSaving(false);
-    toast.success("Imóvel salvo (mock)", { description: "Conecte o schema para persistir de verdade." });
-    navigate({ to: "/app/imoveis" });
+    try {
+      await createProperty(
+        {
+          title: str(form, "title"),
+          city: str(form, "city"),
+          state: str(form, "state"),
+          bedrooms: num(form, "bedrooms"),
+          bathrooms: num(form, "bathrooms"),
+          maxGuests: num(form, "guests"),
+          nightlyRate: num(form, "rate"),
+          cleaningFee: num(form, "cleaning"),
+          laundryFee: num(form, "laundry"),
+          description: str(form, "desc"),
+        },
+        photos.map((p) => p.file),
+      );
+      await queryClient.invalidateQueries({ queryKey: ["properties"] });
+      toast.success("Imóvel cadastrado!");
+      navigate({ to: "/app/imoveis" });
+    } catch (err) {
+      toast.error("Não foi possível salvar", {
+        description: err instanceof Error ? err.message : "Tente novamente.",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -53,35 +82,43 @@ function NovoImovel() {
           <CardContent className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <Label htmlFor="title">Título</Label>
-              <Input id="title" required placeholder="Casa Vista Mar" />
+              <Input id="title" name="title" required placeholder="Casa Vista Mar" />
             </div>
             <div>
               <Label htmlFor="city">Cidade</Label>
-              <Input id="city" required placeholder="Jericoacoara" />
+              <Input id="city" name="city" required placeholder="Jericoacoara" />
             </div>
             <div>
               <Label htmlFor="state">Estado</Label>
-              <Input id="state" required maxLength={2} placeholder="CE" />
+              <Input id="state" name="state" required maxLength={2} placeholder="CE" />
             </div>
             <div>
               <Label htmlFor="bedrooms">Quartos</Label>
-              <Input id="bedrooms" type="number" min={0} defaultValue={2} />
+              <Input id="bedrooms" name="bedrooms" type="number" min={0} defaultValue={2} />
             </div>
             <div>
               <Label htmlFor="bathrooms">Banheiros</Label>
-              <Input id="bathrooms" type="number" min={0} defaultValue={1} />
+              <Input id="bathrooms" name="bathrooms" type="number" min={0} defaultValue={1} />
             </div>
             <div>
               <Label htmlFor="guests">Hóspedes máx.</Label>
-              <Input id="guests" type="number" min={1} defaultValue={4} />
+              <Input id="guests" name="guests" type="number" min={1} defaultValue={4} />
             </div>
             <div>
               <Label htmlFor="rate">Diária (R$)</Label>
-              <Input id="rate" type="number" min={0} defaultValue={500} />
+              <Input id="rate" name="rate" type="number" min={0} defaultValue={500} />
+            </div>
+            <div>
+              <Label htmlFor="cleaning">Taxa de limpeza (R$)</Label>
+              <Input id="cleaning" name="cleaning" type="number" min={0} defaultValue={0} />
+            </div>
+            <div>
+              <Label htmlFor="laundry">Lavanderia (R$)</Label>
+              <Input id="laundry" name="laundry" type="number" min={0} defaultValue={0} />
             </div>
             <div className="sm:col-span-2">
               <Label htmlFor="desc">Descrição</Label>
-              <Textarea id="desc" rows={4} placeholder="Conte o que torna este imóvel especial." />
+              <Textarea id="desc" name="desc" rows={4} placeholder="Conte o que torna este imóvel especial." />
             </div>
           </CardContent>
         </Card>
@@ -109,7 +146,7 @@ function NovoImovel() {
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {photos.map((p, i) => (
                   <div key={i} className="group relative aspect-square overflow-hidden rounded-lg border border-border">
-                    <img src={p.url} alt={p.name} className="h-full w-full object-cover" />
+                    <img src={p.url} alt={p.file.name} className="h-full w-full object-cover" />
                     <button
                       type="button"
                       onClick={() => setPhotos(photos.filter((_, idx) => idx !== i))}

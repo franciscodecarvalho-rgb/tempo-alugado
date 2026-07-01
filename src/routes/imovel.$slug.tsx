@@ -4,21 +4,22 @@ import { PublicHeader } from "@/components/public-header";
 import { PublicFooter } from "@/components/public-footer";
 import { BookingRequestForm } from "@/components/booking-request-form";
 import { Calendar } from "@/components/ui/calendar";
-import { getPropertyBySlug, getBookedRanges } from "@/lib/mock-data";
+import { fetchPropertyBySlug, fetchUnavailableRanges } from "@/lib/api";
 
 export const Route = createFileRoute("/imovel/$slug")({
-  loader: ({ params }) => {
-    const property = getPropertyBySlug(params.slug);
+  loader: async ({ params }) => {
+    const property = await fetchPropertyBySlug(params.slug);
     if (!property) throw notFound();
-    return { property };
+    const booked = await fetchUnavailableRanges(property.id);
+    return { property, booked };
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
           { title: `${loaderData.property.title} — Coastal Stays` },
-          { name: "description", content: loaderData.property.description.slice(0, 155) },
+          { name: "description", content: (loaderData.property.description || "").slice(0, 155) },
           { property: "og:title", content: `${loaderData.property.title} — Coastal Stays` },
-          { property: "og:description", content: loaderData.property.description.slice(0, 155) },
+          { property: "og:description", content: (loaderData.property.description || "").slice(0, 155) },
         ]
       : [],
   }),
@@ -38,8 +39,7 @@ export const Route = createFileRoute("/imovel/$slug")({
 });
 
 function PropertyPage() {
-  const { property } = Route.useLoaderData();
-  const booked = getBookedRanges(property.id);
+  const { property, booked } = Route.useLoaderData();
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,22 +47,28 @@ function PropertyPage() {
 
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Gallery */}
-        <div className="grid gap-2 overflow-hidden rounded-2xl md:grid-cols-4 md:grid-rows-2">
-          <img
-            src={property.photos[0]}
-            alt={property.title}
-            className="h-72 w-full object-cover md:col-span-2 md:row-span-2 md:h-full"
-          />
-          {property.photos.slice(1, 3).map((src: string, i: number) => (
+        {property.photos.length > 0 ? (
+          <div className="grid gap-2 overflow-hidden rounded-2xl md:grid-cols-4 md:grid-rows-2">
             <img
-              key={i}
-              src={src}
-              alt={`${property.title} — foto ${i + 2}`}
-              loading="lazy"
-              className="hidden h-full w-full object-cover md:col-span-1 md:block"
+              src={property.photos[0]}
+              alt={property.title}
+              className="h-72 w-full object-cover md:col-span-2 md:row-span-2 md:h-full"
             />
-          ))}
-        </div>
+            {property.photos.slice(1, 3).map((src: string, i: number) => (
+              <img
+                key={i}
+                src={src}
+                alt={`${property.title} — foto ${i + 2}`}
+                loading="lazy"
+                className="hidden h-full w-full object-cover md:col-span-1 md:block"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex h-64 w-full items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+            Sem fotos ainda
+          </div>
+        )}
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_400px]">
           <div>
@@ -114,7 +120,7 @@ function PropertyPage() {
                 <span className="ml-1 text-sm font-normal text-muted-foreground">/ noite</span>
               </p>
               <div className="mt-5 border-t border-border pt-5">
-                <BookingRequestForm propertyTitle={property.title} />
+                <BookingRequestForm property={property} />
               </div>
             </div>
           </aside>

@@ -1,19 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MOCK_PROPERTIES, getBookedRanges, MOCK_BOOKINGS } from "@/lib/mock-data";
+import { fetchAllProperties, fetchUnavailableRanges, fetchBookings } from "@/lib/api";
 
 export const Route = createFileRoute("/_authenticated/app/calendario")({
   component: CalendarPage,
 });
 
 function CalendarPage() {
-  const [propertyId, setPropertyId] = useState(MOCK_PROPERTIES[0].id);
-  const booked = getBookedRanges(propertyId);
-  const bookings = MOCK_BOOKINGS.filter((b) => b.propertyId === propertyId);
+  const [selected, setSelected] = useState<string | null>(null);
+  const { data: properties = [] } = useQuery({ queryKey: ["properties"], queryFn: fetchAllProperties });
+  const { data: allBookings = [] } = useQuery({ queryKey: ["bookings"], queryFn: fetchBookings });
+
+  const propertyId = selected ?? properties[0]?.id ?? null;
+
+  const { data: booked = [] } = useQuery({
+    queryKey: ["availability", propertyId],
+    queryFn: () => fetchUnavailableRanges(propertyId as string),
+    enabled: !!propertyId,
+  });
+
+  const bookings = allBookings.filter((b) => b.propertyId === propertyId && b.status !== "cancelled");
+
+  if (properties.length === 0) {
+    return (
+      <div className="space-y-2">
+        <h1 className="font-display text-3xl font-semibold">Calendário</h1>
+        <p className="text-muted-foreground">Cadastre um imóvel para ver a ocupação.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -22,10 +42,10 @@ function CalendarPage() {
           <h1 className="font-display text-3xl font-semibold">Calendário</h1>
           <p className="text-muted-foreground">Visualize a ocupação de cada imóvel.</p>
         </div>
-        <Select value={propertyId} onValueChange={setPropertyId}>
+        <Select value={propertyId ?? undefined} onValueChange={setSelected}>
           <SelectTrigger className="w-[280px]"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {MOCK_PROPERTIES.map((p) => (
+            {properties.map((p) => (
               <SelectItem key={p.id} value={p.id}>{p.title}</SelectItem>
             ))}
           </SelectContent>
