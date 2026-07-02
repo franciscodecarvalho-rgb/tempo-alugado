@@ -8,7 +8,14 @@ import { fetchActiveProperties, type Property } from "@/lib/api";
 import heroImg from "@/assets/hero-beach-house.jpg";
 
 export const Route = createFileRoute("/")({
-  loader: () => fetchActiveProperties(),
+  loader: async () => {
+    try {
+      return { properties: await fetchActiveProperties(), loadError: false };
+    } catch (error) {
+      console.error("Failed to load active properties", error);
+      return { properties: [] as Property[], loadError: true };
+    }
+  },
   head: () => ({
     meta: [
       { title: "Coastal Stays — Aluguel de temporada com curadoria" },
@@ -32,7 +39,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const properties = Route.useLoaderData();
+  const { properties, loadError } = Route.useLoaderData();
   return (
     <div className="min-h-screen bg-background">
       <PublicHeader />
@@ -95,7 +102,11 @@ function Index() {
             <p className="mt-2 text-muted-foreground">Selecionados a dedo para a próxima temporada.</p>
           </div>
         </div>
-        {properties.length === 0 ? (
+        {loadError ? (
+          <div className="rounded-2xl border border-dashed border-border bg-card/50 p-12 text-center text-muted-foreground">
+            Não foi possível carregar os imóveis agora. Tente recarregar a página.
+          </div>
+        ) : properties.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-card/50 p-12 text-center text-muted-foreground">
             Nenhum imóvel publicado ainda. Volte em breve!
           </div>
