@@ -14,91 +14,34 @@ export type Database = {
   }
   public: {
     Tables: {
-      properties: {
+      blocked_dates: {
         Row: {
-          id: string
-          slug: string
-          title: string
-          city: string | null
-          state: string | null
-          bedrooms: number
-          bathrooms: number
-          max_guests: number
-          nightly_rate: number
-          cleaning_fee: number
-          laundry_fee: number
-          description: string | null
-          amenities: string[]
-          cover_photo: string | null
-          active: boolean
           created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          title: string
-          city?: string | null
-          state?: string | null
-          bedrooms?: number
-          bathrooms?: number
-          max_guests?: number
-          nightly_rate?: number
-          cleaning_fee?: number
-          laundry_fee?: number
-          description?: string | null
-          amenities?: string[]
-          cover_photo?: string | null
-          active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          slug?: string
-          title?: string
-          city?: string | null
-          state?: string | null
-          bedrooms?: number
-          bathrooms?: number
-          max_guests?: number
-          nightly_rate?: number
-          cleaning_fee?: number
-          laundry_fee?: number
-          description?: string | null
-          amenities?: string[]
-          cover_photo?: string | null
-          active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      property_photos: {
-        Row: {
+          end_date: string
           id: string
           property_id: string
-          url: string
-          position: number
-          created_at: string
+          reason: string | null
+          start_date: string
         }
         Insert: {
+          created_at?: string
+          end_date: string
           id?: string
           property_id: string
-          url: string
-          position?: number
-          created_at?: string
+          reason?: string | null
+          start_date: string
         }
         Update: {
+          created_at?: string
+          end_date?: string
           id?: string
           property_id?: string
-          url?: string
-          position?: number
-          created_at?: string
+          reason?: string | null
+          start_date?: string
         }
         Relationships: [
           {
-            foreignKeyName: "property_photos_property_id_fkey"
+            foreignKeyName: "blocked_dates_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
@@ -108,57 +51,57 @@ export type Database = {
       }
       bookings: {
         Row: {
-          id: string
-          property_id: string
-          guest_name: string
-          guest_email: string
-          guest_phone: string | null
           check_in: string
           check_out: string
-          guests: number
-          status: string
-          nightly_rate: number
           cleaning_fee: number
-          laundry_fee: number
-          total_amount: number
-          message: string | null
           created_at: string
+          guest_email: string
+          guest_name: string
+          guest_phone: string | null
+          guests: number
+          id: string
+          laundry_fee: number
+          message: string | null
+          nightly_rate: number
+          property_id: string
+          status: string
+          total_amount: number
           updated_at: string
         }
         Insert: {
-          id?: string
-          property_id: string
-          guest_name: string
-          guest_email: string
-          guest_phone?: string | null
           check_in: string
           check_out: string
-          guests?: number
-          status?: string
-          nightly_rate?: number
           cleaning_fee?: number
-          laundry_fee?: number
-          total_amount?: number
-          message?: string | null
           created_at?: string
+          guest_email: string
+          guest_name: string
+          guest_phone?: string | null
+          guests?: number
+          id?: string
+          laundry_fee?: number
+          message?: string | null
+          nightly_rate?: number
+          property_id: string
+          status?: string
+          total_amount?: number
           updated_at?: string
         }
         Update: {
-          id?: string
-          property_id?: string
-          guest_name?: string
-          guest_email?: string
-          guest_phone?: string | null
           check_in?: string
           check_out?: string
-          guests?: number
-          status?: string
-          nightly_rate?: number
           cleaning_fee?: number
-          laundry_fee?: number
-          total_amount?: number
-          message?: string | null
           created_at?: string
+          guest_email?: string
+          guest_name?: string
+          guest_phone?: string | null
+          guests?: number
+          id?: string
+          laundry_fee?: number
+          message?: string | null
+          nightly_rate?: number
+          property_id?: string
+          status?: string
+          total_amount?: number
           updated_at?: string
         }
         Relationships: [
@@ -171,34 +114,112 @@ export type Database = {
           },
         ]
       }
-      blocked_dates: {
+      profiles: {
         Row: {
-          id: string
-          property_id: string
-          start_date: string
-          end_date: string
-          reason: string | null
           created_at: string
+          email: string | null
+          id: string
+          name: string | null
         }
         Insert: {
-          id?: string
-          property_id: string
-          start_date: string
-          end_date: string
-          reason?: string | null
           created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
         }
         Update: {
-          id?: string
-          property_id?: string
-          start_date?: string
-          end_date?: string
-          reason?: string | null
           created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      properties: {
+        Row: {
+          active: boolean
+          amenities: string[]
+          bathrooms: number
+          bedrooms: number
+          city: string | null
+          cleaning_fee: number
+          cover_photo: string | null
+          created_at: string
+          description: string | null
+          id: string
+          laundry_fee: number
+          max_guests: number
+          nightly_rate: number
+          slug: string
+          state: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          amenities?: string[]
+          bathrooms?: number
+          bedrooms?: number
+          city?: string | null
+          cleaning_fee?: number
+          cover_photo?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          laundry_fee?: number
+          max_guests?: number
+          nightly_rate?: number
+          slug: string
+          state?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          amenities?: string[]
+          bathrooms?: number
+          bedrooms?: number
+          city?: string | null
+          cleaning_fee?: number
+          cover_photo?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          laundry_fee?: number
+          max_guests?: number
+          nightly_rate?: number
+          slug?: string
+          state?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      property_photos: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          property_id: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position?: number
+          property_id: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          property_id?: string
+          url?: string
         }
         Relationships: [
           {
-            foreignKeyName: "blocked_dates_property_id_fkey"
+            foreignKeyName: "property_photos_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
@@ -206,42 +227,21 @@ export type Database = {
           },
         ]
       }
-      profiles: {
-        Row: {
-          id: string
-          name: string | null
-          email: string | null
-          created_at: string
-        }
-        Insert: {
-          id: string
-          name?: string | null
-          email?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string | null
-          email?: string | null
-          created_at?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           id: string
-          user_id: string
           role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Insert: {
           id?: string
-          user_id: string
           role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Update: {
           id?: string
-          user_id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -252,25 +252,28 @@ export type Database = {
     Functions: {
       check_availability: {
         Args: {
-          _property_id: string
           _check_in: string
           _check_out: string
           _exclude_booking_id?: string
+          _property_id: string
         }
         Returns: boolean
       }
       get_property_availability: {
         Args: { _property_id: string }
-        Returns: { start_date: string; end_date: string }[]
+        Returns: {
+          end_date: string
+          start_date: string
+        }[]
       }
       has_role: {
-        Args: { _user_id: string; _role: Database["public"]["Enums"]["app_role"] }
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
         Returns: boolean
       }
-      is_staff: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_staff: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "gestor"
