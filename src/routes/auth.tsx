@@ -40,18 +40,8 @@ function AuthPage() {
     navigate({ to: "/app", replace: true });
   };
 
-  const signUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: window.location.origin + "/app" },
-    });
-    setLoading(false);
-    if (error) return toast.error("Não foi possível cadastrar", { description: error.message });
-    toast.success("Conta criada!", { description: "Verifique seu e-mail para confirmar." });
-  };
+
+
 
   const signInGoogle = async () => {
     setLoading(true);
