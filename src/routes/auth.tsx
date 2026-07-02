@@ -7,7 +7,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -40,18 +40,8 @@ function AuthPage() {
     navigate({ to: "/app", replace: true });
   };
 
-  const signUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: window.location.origin + "/app" },
-    });
-    setLoading(false);
-    if (error) return toast.error("Não foi possível cadastrar", { description: error.message });
-    toast.success("Conta criada!", { description: "Verifique seu e-mail para confirmar." });
-  };
+
+
 
   const signInGoogle = async () => {
     setLoading(true);
@@ -102,44 +92,20 @@ function AuthPage() {
           <h1 className="font-display text-3xl font-semibold">Bem-vindo</h1>
           <p className="mt-1 text-sm text-muted-foreground">Acesse o painel de gestão.</p>
 
-          <Tabs defaultValue="signin" className="mt-6">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Criar conta</TabsTrigger>
-            </TabsList>
+          <form onSubmit={signIn} className="mt-6 space-y-4">
+            <div>
+              <Label htmlFor="email-in">E-mail</Label>
+              <Input id="email-in" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="pw-in">Senha</Label>
+              <Input id="pw-in" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Entrando..." : "Entrar"}
+            </Button>
+          </form>
 
-            <TabsContent value="signin">
-              <form onSubmit={signIn} className="space-y-4">
-                <div>
-                  <Label htmlFor="email-in">E-mail</Label>
-                  <Input id="email-in" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div>
-                  <Label htmlFor="pw-in">Senha</Label>
-                  <Input id="pw-in" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Entrando..." : "Entrar"}
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup">
-              <form onSubmit={signUp} className="space-y-4">
-                <div>
-                  <Label htmlFor="email-up">E-mail</Label>
-                  <Input id="email-up" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div>
-                  <Label htmlFor="pw-up">Senha</Label>
-                  <Input id="pw-up" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
-                </div>
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? "Criando..." : "Criar conta"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
 
           <div className="my-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
