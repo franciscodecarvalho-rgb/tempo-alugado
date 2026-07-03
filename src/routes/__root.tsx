@@ -79,25 +79,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Coastal Stays — Aluguel de temporada com curadoria" },
+      { title: "Pindoramas — Aluguel de temporada com curadoria" },
       {
         name: "description",
         content:
           "Casas e villas selecionadas para sua próxima temporada. Reserve direto com quem cuida do imóvel.",
       },
-      { property: "og:title", content: "Coastal Stays — Aluguel de temporada com curadoria" },
+      { property: "og:title", content: "Pindoramas — Aluguel de temporada com curadoria" },
       {
         property: "og:description",
         content: "Casas e villas com curadoria para férias inesquecíveis.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Pindoramas" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Coastal Stays — Aluguel de temporada com curadoria" },
-      { name: "description", content: "Cozy Stay Manager is a vacation rental property management application with public and private interfaces." },
-      { property: "og:description", content: "Cozy Stay Manager is a vacation rental property management application with public and private interfaces." },
-      { name: "twitter:description", content: "Cozy Stay Manager is a vacation rental property management application with public and private interfaces." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d8543508-c89e-480a-83da-2e5be176adc6/id-preview-e7fc5eab--bc503b4e-5d2e-47b8-a1d2-7907dd8bc542.lovable.app-1783034799697.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d8543508-c89e-480a-83da-2e5be176adc6/id-preview-e7fc5eab--bc503b4e-5d2e-47b8-a1d2-7907dd8bc542.lovable.app-1783034799697.png" },
+      { name: "twitter:title", content: "Pindoramas — Aluguel de temporada com curadoria" },
+      { name: "twitter:description", content: "Casas e villas com curadoria para férias inesquecíveis." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
