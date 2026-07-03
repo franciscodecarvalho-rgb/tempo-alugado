@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Sparkles, HeadphonesIcon } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+
 import { PublicHeader } from "@/components/public-header";
 import { PublicFooter } from "@/components/public-footer";
 import { PropertyCard } from "@/components/property-card";
