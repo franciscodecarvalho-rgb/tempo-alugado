@@ -5,7 +5,7 @@ export function PublicFooter() {
     <footer id="contato" className="mt-24 border-t border-border/60 bg-secondary/40">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-2">
         <div>
-          <BrandLogo className="h-60 w-auto" />
+          <BrandLogo className="h-[5.25rem] w-auto" />
         </div>
         <div className="text-sm md:text-right">
           <p className="font-medium">Contato</p>

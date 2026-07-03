@@ -7,7 +7,7 @@ export function PublicHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-24 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2" aria-label="Pindoramas">
-          <BrandLogo className="h-18 w-auto" style={{ height: "4.5rem" }} />
+          <BrandLogo className="h-[4.5rem] w-auto" />
         </Link>
         <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
           <Link to="/" activeOptions={{ exact: true }} className="hover:text-foreground [&.active]:text-foreground">
