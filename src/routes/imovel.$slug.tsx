@@ -16,9 +16,9 @@ export const Route = createFileRoute("/imovel/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.property.title} — Coastal Stays` },
+          { title: `${loaderData.property.title} — Pindoramas` },
           { name: "description", content: (loaderData.property.description || "").slice(0, 155) },
-          { property: "og:title", content: `${loaderData.property.title} — Coastal Stays` },
+          { property: "og:title", content: `${loaderData.property.title} — Pindoramas` },
           { property: "og:description", content: (loaderData.property.description || "").slice(0, 155) },
         ]
       : [],

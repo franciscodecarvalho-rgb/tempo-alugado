@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table";
 
 export const Route = createFileRoute("/_authenticated/app/usuarios")({
-  head: () => ({ meta: [{ title: "Usuários — Coastal Stays" }] }),
+  head: () => ({ meta: [{ title: "Usuários — Pindoramas" }] }),
   component: UsuariosPage,
   errorComponent: ({ error }) => (
     <div className="p-6 text-sm text-destructive">

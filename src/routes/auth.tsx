@@ -1,19 +1,19 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Waves } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BrandLogo } from "@/components/brand-logo";
 
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — Coastal Stays" },
-      { name: "description", content: "Acesse o painel de gestão de imóveis Coastal Stays." },
+      { title: "Entrar — Pindoramas" },
+      { name: "description", content: "Acesse o painel de gestão de imóveis Pindoramas." },
     ],
   }),
   component: AuthPage,
@@ -62,11 +62,8 @@ function AuthPage() {
   return (
     <div className="grid min-h-screen bg-gradient-sand md:grid-cols-2">
       <div className="hidden bg-gradient-hero p-12 text-primary-foreground md:flex md:flex-col md:justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-background/20">
-            <Waves className="h-5 w-5" />
-          </span>
-          <span className="font-display text-lg font-semibold">Coastal Stays</span>
+        <Link to="/" className="inline-flex items-center rounded-md bg-background/90 px-3 py-2 w-fit" aria-label="Pindoramas">
+          <BrandLogo className="h-10 w-auto" />
         </Link>
         <div>
           <p className="font-display text-4xl font-semibold leading-tight">
@@ -76,17 +73,14 @@ function AuthPage() {
             Reservas, calendário e tarefas em um painel só.
           </p>
         </div>
-        <p className="text-xs text-primary-foreground/70">© Coastal Stays</p>
+        <p className="text-xs text-primary-foreground/70">© Pindoramas</p>
       </div>
 
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-sm">
           <div className="md:hidden">
-            <Link to="/" className="mb-6 inline-flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Waves className="h-5 w-5" />
-              </span>
-              <span className="font-display text-lg font-semibold">Coastal Stays</span>
+            <Link to="/" className="mb-6 inline-flex items-center" aria-label="Pindoramas">
+              <BrandLogo className="h-10 w-auto" />
             </Link>
           </div>
           <h1 className="font-display text-3xl font-semibold">Bem-vindo</h1>

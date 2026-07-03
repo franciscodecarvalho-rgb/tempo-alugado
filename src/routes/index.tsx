@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
   },
   head: () => ({
     meta: [
-      { title: "Coastal Stays — Aluguel de temporada com curadoria" },
+      { title: "Pindoramas — Aluguel de temporada com curadoria" },
       {
         name: "description",
         content:

@@ -7,9 +7,9 @@ import {
   ClipboardList,
   Sparkles,
   LogOut,
-  Waves,
   UserCog,
 } from "lucide-react";
+import { BrandLogo } from "@/components/brand-logo";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { checkIsAdmin } from "@/lib/users.functions";
@@ -60,11 +60,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link to="/app" className="flex items-center gap-2 px-2 py-1">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Waves className="h-4 w-4" />
-          </span>
-          <span className="font-display text-base font-semibold">Coastal</span>
+        <Link to="/app" className="flex items-center px-2 py-1" aria-label="Pindoramas">
+          <BrandLogo className="h-9 w-auto" />
         </Link>
       </SidebarHeader>
       <SidebarContent>
