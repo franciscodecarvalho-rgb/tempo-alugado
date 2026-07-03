@@ -72,7 +72,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Painel</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url, item.exact)}>
                     <Link to={item.url as "/app"}>
