@@ -8,7 +8,11 @@ import {
   Sparkles,
   LogOut,
   Waves,
+  UserCog,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { checkIsAdmin } from "@/lib/users.functions";
 import {
   Sidebar,
   SidebarContent,
@@ -36,6 +40,12 @@ export function AppSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const check = useServerFn(checkIsAdmin);
+  const adminQuery = useQuery({ queryKey: ["is-admin"], queryFn: () => check({}) });
+  const navItems: NavItem[] = adminQuery.data?.isAdmin
+    ? [...items, { title: "Usuários", url: "/app/usuarios", icon: UserCog }]
+    : items;
+
 
   const isActive = (url: string, exact?: boolean) =>
     exact ? pathname === url : pathname === url || pathname.startsWith(url + "/");
@@ -62,7 +72,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Painel</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url, item.exact)}>
                     <Link to={item.url as "/app"}>

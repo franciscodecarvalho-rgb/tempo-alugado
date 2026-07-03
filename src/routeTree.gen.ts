@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ImovelSlugRouteImport } from './routes/imovel.$slug'
 import { Route as AuthenticatedAppRouteImport } from './routes/_authenticated/app'
 import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticated/app.index'
+import { Route as AuthenticatedAppUsuariosRouteImport } from './routes/_authenticated/app.usuarios'
 import { Route as AuthenticatedAppTarefasRouteImport } from './routes/_authenticated/app.tarefas'
 import { Route as AuthenticatedAppReservasRouteImport } from './routes/_authenticated/app.reservas'
 import { Route as AuthenticatedAppImoveisRouteImport } from './routes/_authenticated/app.imoveis'
@@ -51,6 +52,12 @@ const AuthenticatedAppIndexRoute = AuthenticatedAppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAppRoute,
 } as any)
+const AuthenticatedAppUsuariosRoute =
+  AuthenticatedAppUsuariosRouteImport.update({
+    id: '/usuarios',
+    path: '/usuarios',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 const AuthenticatedAppTarefasRoute = AuthenticatedAppTarefasRouteImport.update({
   id: '/tarefas',
   path: '/tarefas',
@@ -95,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
   '/app/reservas': typeof AuthenticatedAppReservasRoute
   '/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/app/usuarios': typeof AuthenticatedAppUsuariosRoute
   '/app/': typeof AuthenticatedAppIndexRoute
   '/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
   '/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
@@ -107,6 +115,7 @@ export interface FileRoutesByTo {
   '/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
   '/app/reservas': typeof AuthenticatedAppReservasRoute
   '/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/app/usuarios': typeof AuthenticatedAppUsuariosRoute
   '/app': typeof AuthenticatedAppIndexRoute
   '/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
   '/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
@@ -122,6 +131,7 @@ export interface FileRoutesById {
   '/_authenticated/app/imoveis': typeof AuthenticatedAppImoveisRouteWithChildren
   '/_authenticated/app/reservas': typeof AuthenticatedAppReservasRoute
   '/_authenticated/app/tarefas': typeof AuthenticatedAppTarefasRoute
+  '/_authenticated/app/usuarios': typeof AuthenticatedAppUsuariosRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
   '/_authenticated/app/imoveis/$id': typeof AuthenticatedAppImoveisIdRoute
   '/_authenticated/app/imoveis/novo': typeof AuthenticatedAppImoveisNovoRoute
@@ -137,6 +147,7 @@ export interface FileRouteTypes {
     | '/app/imoveis'
     | '/app/reservas'
     | '/app/tarefas'
+    | '/app/usuarios'
     | '/app/'
     | '/app/imoveis/$id'
     | '/app/imoveis/novo'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/app/imoveis'
     | '/app/reservas'
     | '/app/tarefas'
+    | '/app/usuarios'
     | '/app'
     | '/app/imoveis/$id'
     | '/app/imoveis/novo'
@@ -163,6 +175,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/imoveis'
     | '/_authenticated/app/reservas'
     | '/_authenticated/app/tarefas'
+    | '/_authenticated/app/usuarios'
     | '/_authenticated/app/'
     | '/_authenticated/app/imoveis/$id'
     | '/_authenticated/app/imoveis/novo'
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AuthenticatedAppIndexRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/usuarios': {
+      id: '/_authenticated/app/usuarios'
+      path: '/usuarios'
+      fullPath: '/app/usuarios'
+      preLoaderRoute: typeof AuthenticatedAppUsuariosRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
     '/_authenticated/app/tarefas': {
@@ -285,6 +305,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppImoveisRoute: typeof AuthenticatedAppImoveisRouteWithChildren
   AuthenticatedAppReservasRoute: typeof AuthenticatedAppReservasRoute
   AuthenticatedAppTarefasRoute: typeof AuthenticatedAppTarefasRoute
+  AuthenticatedAppUsuariosRoute: typeof AuthenticatedAppUsuariosRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
 }
 
@@ -293,6 +314,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppImoveisRoute: AuthenticatedAppImoveisRouteWithChildren,
   AuthenticatedAppReservasRoute: AuthenticatedAppReservasRoute,
   AuthenticatedAppTarefasRoute: AuthenticatedAppTarefasRoute,
+  AuthenticatedAppUsuariosRoute: AuthenticatedAppUsuariosRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
 }
 
