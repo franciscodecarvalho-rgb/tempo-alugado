@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Sparkles, HeadphonesIcon } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+
 import { PublicHeader } from "@/components/public-header";
 import { PublicFooter } from "@/components/public-footer";
 import { PropertyCard } from "@/components/property-card";
-import { Button } from "@/components/ui/button";
+
 import { fetchActiveProperties, type Property } from "@/lib/api";
 import heroImg from "@/assets/hero-beach-house.jpg";
 
@@ -58,44 +58,15 @@ function Index() {
         </div>
         <div className="relative mx-auto max-w-6xl px-4 py-24 md:py-36">
           <div className="max-w-2xl text-primary-foreground">
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full bg-background/20 px-3 py-1 text-xs font-medium backdrop-blur">
-              <Sparkles className="h-3.5 w-3.5" /> Curadoria de temporada
-            </p>
-            <h1 className="font-display text-5xl font-semibold leading-[1.05] md:text-6xl">
-              O mar te espera. <br />
-              <span className="italic">Nós cuidamos do resto.</span>
+            <h1 className="font-display text-6xl font-semibold leading-[1.05] md:text-7xl">
+              Pindorama
             </h1>
-            <p className="mt-5 max-w-lg text-base text-primary-foreground/90 md:text-lg">
-              Casas e villas selecionadas em Jericoacoara, Búzios, Praia do Rosa e outros destinos favoritos.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="secondary">
-                <a href="#imoveis">Ver imóveis <ArrowRight className="ml-1 h-4 w-4" /></a>
-              </Button>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Perks */}
-      <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="grid gap-6 md:grid-cols-3">
-          {[
-            { icon: ShieldCheck, title: "Reserva segura", desc: "Verificamos cada imóvel pessoalmente." },
-            { icon: Sparkles, title: "Curadoria real", desc: "Só casas que a gente indicaria pra família." },
-            { icon: HeadphonesIcon, title: "Suporte 24/7", desc: "Estamos com você durante toda a estadia." },
-          ].map((p) => (
-            <div key={p.title} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
-              <p.icon className="h-6 w-6 text-primary" />
-              <h3 className="mt-3 font-display text-lg font-semibold">{p.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Properties */}
-      <section id="imoveis" className="mx-auto max-w-6xl px-4 py-8">
+      <section id="imoveis" className="mx-auto max-w-6xl px-4 py-16">
         <div className="mb-8 flex items-end justify-between gap-4">
           <div>
             <h2 className="font-display text-3xl font-semibold md:text-4xl">Imóveis em destaque</h2>
@@ -119,22 +90,6 @@ function Index() {
         )}
       </section>
 
-      {/* CTA gestor */}
-      <section className="mx-auto mt-16 max-w-6xl px-4">
-        <div className="overflow-hidden rounded-3xl bg-gradient-hero p-10 text-primary-foreground shadow-warm md:p-14">
-          <div className="max-w-2xl">
-            <h2 className="font-display text-3xl font-semibold md:text-4xl">
-              É proprietário ou gestor?
-            </h2>
-            <p className="mt-3 text-primary-foreground/90">
-              Cadastre seu imóvel e gerencie reservas, calendário e tarefas em um só lugar.
-            </p>
-            <Button asChild size="lg" variant="secondary" className="mt-6">
-              <Link to="/auth">Acessar o painel</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
 
       <PublicFooter />
     </div>
