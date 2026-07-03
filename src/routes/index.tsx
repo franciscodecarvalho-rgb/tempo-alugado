@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PublicHeader } from "@/components/public-header";
 import { PublicFooter } from "@/components/public-footer";
 import { PropertyCard } from "@/components/property-card";
-import { Button } from "@/components/ui/button";
+
 import { fetchActiveProperties, type Property } from "@/lib/api";
 import heroImg from "@/assets/hero-beach-house.jpg";
 
