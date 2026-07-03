@@ -1,4 +1,4 @@
-import logoAsset from "@/assets/pindoramas-logo.png.asset.json";
+import logoAsset from "@/assets/pindorama-logo.png.asset.json";
 
 type Props = {
   className?: string;
